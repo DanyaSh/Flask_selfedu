@@ -1,6 +1,6 @@
 '''
-Lesson 04
-code - url_for
+Lesson 05
+code - static
 '''
 
 import os
