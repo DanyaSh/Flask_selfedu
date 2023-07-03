@@ -7,7 +7,7 @@ import os
 from flask import Flask, render_template, url_for, request
 from dotenv import load_dotenv
 
-load_dotenv()
+load_dotenv('.env')
 
 app = Flask(__name__)
 
