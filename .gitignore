@@ -1,5 +1,5 @@
 .env
 .vscode/
-.logs/error.log
-.logs/access.log
+logs/error.log
+logs/access.log
 __pycache__/
