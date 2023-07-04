@@ -10,10 +10,11 @@ from dotenv import load_dotenv
 load_dotenv('.env')
 
 app = Flask(__name__)
+app.config['DATA_TEXT'] = os.getenv('DATA_TEXT')
 
 menu=[{'name':"Установка", 'url':'install-flask'},
       {'name':"Первое приложение", 'url':'first-app'},
-      {'name':"Обратная связь", 'url':'contact'}]
+      {'name':os.getenv('DATA_TEXT'), 'url':'contact'}]
 
 @app.route('/')
 def index():
