@@ -1,6 +1,6 @@
 '''
-Lesson 05
-code - static
+Lesson 06
+code - flash
 '''
 
 import os
