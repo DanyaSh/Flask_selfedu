@@ -1,6 +1,6 @@
 '''
 Lesson 08
-code - checkout
+code - sqlite
 '''
 
 import os
