@@ -1,6 +1,6 @@
 '''
-Lesson 07
-code - login
+Lesson 08
+code - checkout
 '''
 
 import os
