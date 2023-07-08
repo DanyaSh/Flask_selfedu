@@ -4,14 +4,32 @@ code - sqlite
 '''
 
 import os
-from flask import Flask, render_template, url_for, request, flash, session, redirect, abort
+import sqlite3
+from flask import Flask, render_template, url_for, request, flash, session, redirect, abort, g
 from dotenv import load_dotenv
 
-load_dotenv('.env')
+env=load_dotenv('.env')
 
 app = Flask(__name__)
-app.config['DATA_TEXT'] = os.getenv('DATA_TEXT')
-app.config['SECRET_KEY'] = os.getenv('SECRET_KEY')
+app.config.from_object(env)
+app.config.update(dict(DATA_BASE=os.path.join(app.root_path, 'site.sqlite')))
+
+def connect_db():
+    conn=sqlite3.connect(app.config['DATA_BASE'])
+    conn.row_factory=sqlite3.Row
+    return conn
+
+def create_db():
+    db=connect_db()
+    with app.open_resource('sql_db.sql', mode='r') as f:
+        db.cursor().executescript(f.read())
+    db.commit()
+    db.close()
+
+def get_db():
+    if not hasattr(g, 'link_db'):
+        g.link_db=connect_db()
+    return g.link_db
 
 menu=[{'name':"Установка", 'url':'install-flask'},
       {'name':"Первое приложение", 'url':'first-app'},
@@ -20,6 +38,7 @@ menu=[{'name':"Установка", 'url':'install-flask'},
 @app.route('/')
 def index():
     print(url_for("index"))
+    db=get_db()
     return render_template('index.html', menu=menu)
 
 @app.route('/about')
@@ -54,6 +73,13 @@ def profile(username):
     if 'userLogged' not in session or session['userLogged']!=username:
         abort(401)
     return f"Пользователь: {username}"
+
+@app.teardown_appcontext
+def close_db(error):
+    if hasattr(g, 'link_db'):
+        print('close connection data base')
+        g.link_db.close()
+
 
 @app.errorhandler(404)
 def page_not_found(error):

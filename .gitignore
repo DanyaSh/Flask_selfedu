@@ -3,3 +3,4 @@
 /logs/error.log
 /logs/access.log
 __pycache__/
+site.sqlite
