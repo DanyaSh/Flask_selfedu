@@ -4,3 +4,4 @@
 /logs/access.log
 __pycache__/
 site.sqlite
+site.db
