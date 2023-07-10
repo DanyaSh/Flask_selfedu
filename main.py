@@ -25,10 +25,12 @@ from flask import Flask, render_template, url_for, request, flash, session, redi
 from dotenv import load_dotenv
 from FDataBase import FDataBase
 
-env=load_dotenv('.env')
+# env=load_dotenv('.env')
+load_dotenv()
 
 app = Flask(__name__)
-app.config.from_object(env) #❗️This line doesn't work
+# app.config.from_object(env) #❗️This line doesn't work
+app.config.update(os.environ)
 app.config.update(dict(DATA_BASE=os.path.join(app.root_path, 'site.db')))
 
 def connect_db():
@@ -55,7 +57,35 @@ def index():
     db=get_db()
     dbase=FDataBase(db)
     menu=dbase.get_menu()
-    return render_template('index.html', menu=dbase.get_menu())
+    return render_template('index.html', menu=dbase.get_menu(), posts=dbase.get_posts_announce())
+
+@app.route('/add_post', methods=["POST", "GET"])
+def add_post():
+    print(url_for("add_post"))
+    db=get_db()
+    dbase=FDataBase(db)
+    menu=dbase.get_menu()
+    if request.method=="POST":
+        if len(request.form['name'])>4 and len(request.form['post'])>10:
+            res = dbase.add_post(request.form['name'], request.form['post'])
+            if res:
+                flash("Статья успешно добавлена", category='success')
+            else:
+                flash("Ошибка добавления статьи", category='error')
+        else:
+            flash("Ошибка добавления статьи", category='error')
+    return render_template('add_post.html', title="Добавление статьи", menu=dbase.get_menu())
+
+@app.route("/post/<int:id_post>")
+def show_post(id_post):
+    print(url_for("show_post", id_post=id_post))
+    db=get_db()
+    dbase=FDataBase(db)
+    menu=dbase.get_menu()
+    title, text = dbase.get_post(id_post)
+    if not title:
+        abort(404)
+    return render_template('post.html', title=title, text=text, menu=dbase.get_menu())
 
 @app.route('/about')
 def about():
@@ -112,6 +142,9 @@ def close_db(error):
 
 @app.errorhandler(404)
 def page_not_found(error):
+    db=get_db()
+    dbase=FDataBase(db)
+    menu=dbase.get_menu()
     return render_template('page404.html', title="Страница не найдена", menu=dbase.get_menu()), 404
 
 # with app.test_request_context():
