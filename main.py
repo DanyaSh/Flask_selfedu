@@ -1,22 +1,19 @@
 '''
 --------------------------Lessons Flask form youtube chanel selfedu--------------------------
 '''
-about= "Lesson 09"
-code_name= "add_post"
+about= "Lesson 10"
+code_name= "after lesson 09, critical bug"
 '''
 🔻 Introduction:
     List-----------------------------------------------------------------------------------
-        ✅ SQLite
-        ⚪️ Add post
-        🔴 app.config.from_object(env) (line 29)
-        🔵 Lesson 09 stop on 06:00
+        ✅ url in database with /
     Legend-----------------------------------------------------------------------------------
         ✅ Done
         ⚪️ Plan
         ⚫️ Low
         🔵 Medium
         🔴 High
-        ❗️ Critical
+        🚨 Critical
 '''
 
 import os
